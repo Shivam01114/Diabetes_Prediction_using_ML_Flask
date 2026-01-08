@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Diet & Lifestyle Recommendation</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+<div class="sidebar">
+<h2>Diabetes AI</h2>
+<ul>
+<li onclick="location.href='/'">Overview</li>
+<li onclick="location.href='/dashboard'">Dashboard</li>
+<li onclick="location.href='/decision'">AI Decision</li>
+<li class="active">Diet</li>
+<li onclick="location.href='/reports'">Reports</li>
+</ul>
+</div>
+
+<div class="main-content">
+<h1>🥗 Diet, Workout & Lifestyle Guide</h1>
+
+{% if patient and patient.RiskValue is not none %}
+
+{% if patient.RiskValue >= 60 %}
+<div class="info-box">
+<h3 style="color:#ff4b4b;">🔴 High Diabetes Risk (Strict Control Required)</h3>
+
+<h4>🍽 Diet Plan</h4>
+<ul>
+<li>Zero sugar & low-carb diet</li>
+<li>Vegetables, salads, oats, dal</li>
+<li>High protein food (paneer, tofu, eggs)</li>
+<li>Small meals every 3–4 hours</li>
+</ul>
+
+<h4>🚫 Avoid Completely</h4>
+<ul>
+<li>Sweets, bakery items</li>
+<li>Cold drinks, packaged juices</li>
+<li>White rice, refined flour</li>
+</ul>
+
+<h4>🏃 Workout</h4>
+<ul>
+<li>Brisk walking 45 min daily</li>
+<li>Light strength training</li>
+<li>Yoga & breathing exercises</li>
+</ul>
+
+<h4>🧘 Lifestyle</h4>
+<ul>
+<li>Daily sugar monitoring</li>
+<li>Weight control</li>
+<li>No smoking or alcohol</li>
+</ul>
+
+<p><strong>Doctor Note:</strong> Diabetes can be controlled with strict discipline.</p>
+</div>
+
+{% elif patient.RiskValue >= 30 %}
+<div class="info-box">
+<h3 style="color:#ffd84d;">🟡 Moderate Diabetes Risk (Prevention Stage)</h3>
+
+<h4>🍽 Diet</h4>
+<ul>
+<li>Balanced meals with controlled carbs</li>
+<li>Whole grains & vegetables</li>
+<li>Low GI fruits</li>
+</ul>
+
+<h4>🏃 Workout</h4>
+<ul>
+<li>Walking 30 min daily</li>
+<li>Light cardio 4–5 days/week</li>
+</ul>
+
+<h4>🧘 Lifestyle</h4>
+<ul>
+<li>Weight management</li>
+<li>Sugar test every 6 months</li>
+</ul>
+</div>
+
+{% else %}
+<div class="info-box">
+<h3 style="color:#00ff9c;">🟢 Low Diabetes Risk (Healthy Maintenance)</h3>
+
+<h4>🍽 Diet</h4>
+<ul>
+<li>Normal balanced home food</li>
+<li>Limit sugar intake</li>
+<li>Seasonal fruits & vegetables</li>
+</ul>
+
+<h4>🏃 Workout</h4>
+<ul>
+<li>20–30 min daily walk</li>
+<li>Active lifestyle</li>
+</ul>
+
+<h4>🧘 Lifestyle</h4>
+<ul>
+<li>Annual sugar check</li>
+<li>Maintain healthy routine</li>
+</ul>
+</div>
+{% endif %}
+
+{% else %}
+<p>No patient data available. Please analyze patient first.</p>
+{% endif %}
+
+</div>
+</div>
+
+</body>
+</html>

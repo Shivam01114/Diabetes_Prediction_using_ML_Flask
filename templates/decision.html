@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>🧠 AI Diabetes Decision</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+<div class="sidebar">
+    <h2>Diabetes AI</h2>
+    <ul>
+        <li onclick="location.href='/'">Overview</li>
+        <li onclick="location.href='/dashboard'">Dashboard</li>
+        <li class="active">AI Decision</li>
+        <li onclick="location.href='/diet'">Diet</li>
+        <li onclick="location.href='/reports'">Reports</li>
+    </ul>
+</div>
+
+<div class="main-content">
+
+<h1>🧠 AI Doctor Clinical Explanation</h1>
+
+{% if patient and patient.Result %}
+
+<!-- RESULT -->
+<div class="info-box">
+    <h3>{{ patient.Result }}</h3>
+    <p><strong>Estimated Risk:</strong> {{ patient.Risk }}</p>
+</div>
+
+<!-- PARAMETER SUMMARY -->
+<div class="info-box">
+<h3>🩺 Parameter-wise Summary</h3>
+
+<p><b>Pregnancies:</b> {{ patient.Pregnancies }}</p>
+<p><b>Glucose:</b> {{ patient.Glucose }}</p>
+<p><b>Blood Pressure:</b> {{ patient.BloodPressure }}</p>
+<p><b>Skin Thickness:</b> {{ patient.SkinThickness }}</p>
+<p><b>Insulin:</b> {{ patient.Insulin }}</p>
+<p><b>BMI:</b> {{ patient.BMI }}</p>
+<p><b>Diabetes Pedigree Function:</b> {{ patient.DiabetesPedigreeFunction }}</p>
+<p><b>Age:</b> {{ patient.Age }}</p>
+</div>
+
+<!-- AI LOGIC EXPLANATION -->
+<div class="info-box">
+<h3>🧠 AI Clinical Interpretation</h3>
+
+<!-- Glucose -->
+{% if patient.Glucose|int >= 126 %}
+<p>🔴 <b>Glucose:</b> High blood sugar detected. This is a major indicator of diabetes.</p>
+{% elif patient.Glucose|int >= 100 %}
+<p>🟡 <b>Glucose:</b> Borderline glucose level. Risk of diabetes in future.</p>
+{% else %}
+<p>🟢 <b>Glucose:</b> Normal blood sugar level.</p>
+{% endif %}
+
+<!-- BMI -->
+{% if patient.BMI|float >= 30 %}
+<p>🔴 <b>BMI:</b> Obesity detected. Weight control is strongly advised.</p>
+{% elif patient.BMI|float >= 25 %}
+<p>🟡 <b>BMI:</b> Overweight category. Lifestyle improvement needed.</p>
+{% else %}
+<p>🟢 <b>BMI:</b> Healthy body weight.</p>
+{% endif %}
+
+<!-- Blood Pressure -->
+{% if patient.BloodPressure|int >= 140 %}
+<p>🔴 <b>Blood Pressure:</b> High BP increases diabetes complications.</p>
+{% elif patient.BloodPressure|int >= 120 %}
+<p>🟡 <b>Blood Pressure:</b> Slightly elevated BP.</p>
+{% else %}
+<p>🟢 <b>Blood Pressure:</b> Normal BP.</p>
+{% endif %}
+
+<!-- Age -->
+{% if patient.Age|int >= 45 %}
+<p>🟡 <b>Age:</b> Risk of diabetes increases with age.</p>
+{% else %}
+<p>🟢 <b>Age:</b> Age-related risk is low.</p>
+{% endif %}
+
+</div>
+
+<!-- AI DOCTOR VOICE -->
+<div class="info-box">
+<h3>🎙️ AI Doctor Voice</h3>
+
+<select id="langSelect">
+    <option value="hi">Hindi</option>
+    <option value="en">English</option>
+</select>
+
+<br><br>
+<button onclick="doctorSpeak()">🩺 Start Doctor Explanation</button>
+</div>
+
+{% else %}
+<p>No patient data available.</p>
+{% endif %}
+
+</div>
+</div>
+
+<script>
+let voices=[];
+speechSynthesis.onvoiceschanged=()=>voices=speechSynthesis.getVoices();
+
+function doctorSpeak(){
+speechSynthesis.cancel();
+
+let lang=document.getElementById("langSelect").value;
+let msg="";
+let voice=null;
+
+/* ======================= HINDI ======================= */
+if(lang==="hi"){
+
+msg += "Namaste. Main ek doctor ke roop mein aapki diabetes report detail mein samjha raha hoon. Dhyaan se suniye. ";
+
+/* 1. Pregnancies */
+msg += "Sabse pehle pregnancies ke baare mein baat karte hain. ";
+msg += "Pregnancies ka matlab hota hai kitni baar delivery hui hai. ";
+msg += "Aapki pregnancies value {{ patient.Pregnancies }} hai. ";
+msg += "Zyada pregnancies hone par future mein diabetes ka risk badh sakta hai. ";
+
+/* 2. Glucose */
+msg += "Ab glucose ki baat karte hain. ";
+msg += "Glucose blood mein sugar ke level ko dikhata hai. ";
+msg += "Aapka glucose level {{ patient.Glucose }} hai. ";
+
+{% if patient.Glucose|int >= 126 %}
+msg += "Yeh glucose kaafi zyada hai, jo diabetes hone ka strong signal hota hai. ";
+msg += "Isse control karne ke liye sugar, sweets aur refined carbs kam karna zaroori hai. ";
+{% elif patient.Glucose|int >= 100 %}
+msg += "Yeh glucose borderline range mein hai. Aage chal kar diabetes ho sakti hai agar lifestyle control na ho. ";
+{% else %}
+msg += "Yeh glucose normal range mein hai, jo ek achhi baat hai. ";
+{% endif %}
+
+/* 3. Blood Pressure */
+msg += "Ab blood pressure par aate hain. ";
+msg += "Blood pressure yeh batata hai ki blood arteries par kitna pressure daal raha hai. ";
+msg += "Aapka blood pressure {{ patient.BloodPressure }} hai. ";
+
+{% if patient.BloodPressure|int >= 140 %}
+msg += "Yeh blood pressure high hai, jo diabetes ke saath heart aur kidney problems badha sakta hai. ";
+{% elif patient.BloodPressure|int >= 120 %}
+msg += "Blood pressure thoda badha hua hai, isse control karna zaroori hai. ";
+{% else %}
+msg += "Blood pressure normal hai, jo positive sign hai. ";
+{% endif %}
+
+/* 4. Skin Thickness */
+msg += "Skin thickness body fat ko indicate karta hai. ";
+msg += "Aapki skin thickness value {{ patient.SkinThickness }} hai. ";
+msg += "Zyada skin thickness ka matlab body fat zyada hona ho sakta hai. ";
+
+/* 5. Insulin */
+msg += "Insulin ek hormone hota hai jo blood sugar ko control karta hai. ";
+msg += "Aapka insulin level {{ patient.Insulin }} hai. ";
+msg += "Agar insulin imbalance ho jaye to sugar control mushkil ho jata hai. ";
+
+/* 6. BMI */
+msg += "Ab BMI ki baat karte hain. ";
+msg += "BMI weight aur height ke relation ko dikhata hai. ";
+msg += "Aapka BMI {{ patient.BMI }} hai. ";
+
+{% if patient.BMI|float >= 30 %}
+msg += "BMI kaafi zyada hai, jisse diabetes control mushkil ho jata hai. Weight kam karna bahut zaroori hai. ";
+{% elif patient.BMI|float >= 25 %}
+msg += "BMI thoda zyada hai, lifestyle improvement ki zarurat hai. ";
+{% else %}
+msg += "BMI normal range ke kareeb hai. ";
+{% endif %}
+
+/* 7. Diabetes Pedigree Function */
+msg += "Diabetes pedigree function genetic risk ko dikhata hai. ";
+msg += "Aapka genetic risk score {{ patient.DiabetesPedigreeFunction }} hai. ";
+msg += "Agar family history ho to diabetes ka risk badh jata hai. ";
+
+/* 8. Age */
+msg += "Ab age par aate hain. ";
+msg += "Aapki age {{ patient.Age }} saal hai. ";
+msg += "Age badhne ke saath diabetes ka risk naturally badhta hai. ";
+
+/* Conclusion */
+msg += "Overall, aapko diet control, regular walking, weight management aur sugar monitoring par dhyaan dena chahiye. ";
+msg += "Yeh AI explanation sirf guidance ke liye hai. Final treatment ke liye certified doctor se zaroor consult karein. ";
+
+voice = voices.find(v=>v.lang.startsWith("hi"));
+}
+
+/* ======================= ENGLISH ======================= */
+else{
+
+msg += "Hello. I will explain your diabetes report as a medical doctor would during a clinical consultation. ";
+
+/* 1. Pregnancies */
+msg += "First, let us talk about pregnancies. ";
+msg += "Pregnancies indicate the number of times childbirth has occurred. ";
+msg += "Your pregnancies value is {{ patient.Pregnancies }}. ";
+msg += "Higher pregnancies may increase diabetes risk later in life. ";
+
+/* 2. Glucose */
+msg += "Now, let us discuss glucose. ";
+msg += "Glucose represents the blood sugar level. ";
+msg += "Your glucose level is {{ patient.Glucose }}. ";
+
+{% if patient.Glucose|int >= 126 %}
+msg += "This glucose value is high and strongly indicates diabetes. ";
+msg += "Reducing sugar intake and refined carbohydrates is very important. ";
+{% elif patient.Glucose|int >= 100 %}
+msg += "This is a borderline glucose level and may lead to diabetes if not controlled. ";
+{% else %}
+msg += "This glucose level is within the normal range, which is a positive sign. ";
+{% endif %}
+
+/* 3. Blood Pressure */
+msg += "Blood pressure reflects stress on the blood vessels. ";
+msg += "Your blood pressure is {{ patient.BloodPressure }}. ";
+
+{% if patient.BloodPressure|int >= 140 %}
+msg += "High blood pressure increases complications related to diabetes. ";
+{% elif patient.BloodPressure|int >= 120 %}
+msg += "Blood pressure is slightly elevated and should be monitored. ";
+{% else %}
+msg += "Blood pressure is normal, which is good. ";
+{% endif %}
+
+/* 4. Skin Thickness */
+msg += "Skin thickness indicates body fat distribution. ";
+msg += "Your skin thickness value is {{ patient.SkinThickness }}. ";
+
+/* 5. Insulin */
+msg += "Insulin is a hormone responsible for regulating blood sugar. ";
+msg += "Your insulin level is {{ patient.Insulin }}. ";
+msg += "Insulin imbalance makes glucose control difficult. ";
+
+/* 6. BMI */
+msg += "Body Mass Index reflects body fat. ";
+msg += "Your BMI is {{ patient.BMI }}. ";
+
+{% if patient.BMI|float >= 30 %}
+msg += "This BMI value indicates obesity, which significantly increases diabetes risk. ";
+{% elif patient.BMI|float >= 25 %}
+msg += "BMI is slightly high and lifestyle modification is recommended. ";
+{% else %}
+msg += "BMI is within a healthy range. ";
+{% endif %}
+
+/* 7. Genetic Risk */
+msg += "Diabetes pedigree function represents genetic susceptibility. ";
+msg += "Your value is {{ patient.DiabetesPedigreeFunction }}. ";
+
+/* 8. Age */
+msg += "Your age is {{ patient.Age }} years. ";
+msg += "The risk of diabetes increases with advancing age. ";
+
+/* Conclusion */
+msg += "Overall, maintaining a balanced diet, regular physical activity, weight control and routine monitoring is strongly advised. ";
+msg += "This AI explanation is for educational purposes and does not replace professional medical advice. ";
+
+voice = voices.find(v=>v.lang.startsWith("en"));
+}
+
+let speech = new SpeechSynthesisUtterance(msg);
+speech.voice = voice || null;
+speech.lang = lang==="hi" ? "hi-IN" : "en-US";
+speech.rate = 0.92;
+speechSynthesis.speak(speech);
+}
+</script>
+
+</body>
+</html>

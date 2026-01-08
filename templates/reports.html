@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reports</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="dashboard">
+<div class="sidebar">
+<h2>Diabetes AI</h2>
+<ul>
+<li onclick="location.href='/'">Overview</li>
+<li onclick="location.href='/dashboard'">Dashboard</li>
+<li onclick="location.href='/decision'">AI Decision</li>
+<li onclick="location.href='/diet'">Diet</li>
+<li class="active">Reports</li>
+</ul>
+</div>
+
+<div class="main-content">
+<h1>📄 Medical Report</h1>
+
+<div class="info-box">
+{% for k,v in patient.items() %}
+<p><b>{{k}}:</b> {{v}}</p>
+{% endfor %}
+</div>
+
+<button onclick="location.href='/download_report'">
+Download PDF Report
+</button>
+
+</div>
+</div>
+
+</body>
+</html>
